@@ -14,8 +14,8 @@ from procesamiento_datos import procesar_datos  # Función de preprocesamiento d
 
 # Cargamos el modelo entrenado y el escalador usando joblib
 
-modelo = joblib.load('model/best_model.pkl')
-scaler = joblib.load('model/scaler.pkl')
+modelo = joblib.load('best_model.pkl')
+scaler = joblib.load('scaler.pkl')
 
 def inferencia(input_file, output_file):
 
