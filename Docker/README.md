@@ -16,4 +16,4 @@ y un script de inferencia para realizar predicciones con el modelo cargado.
    Se debe pasar un archivo input.csv como argumento de entrada y 
    se obtiene el archivo output.csv con las predicciones.
 
-	docker run --rm -v $(pwd)/input_data:/app/input_data -v $(pwd)/output:/app/output mi_modelo_inferencia
+	docker run --rm -v $(pwd)/input_data:/app/input_data -v $(pwd)/output:/app/output inferencia
