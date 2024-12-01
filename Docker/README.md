@@ -7,6 +7,7 @@ y un script de inferencia para realizar predicciones con el modelo cargado.
 
  - Clonar este repositorio:
 	git clone https://github.com/LBreccia/AA1-TUIA-Breccia-Justo.git
+
 	cd AA1-TUIA-Breccia-Justo/docker
 
  - Construir la imagen Docker:
