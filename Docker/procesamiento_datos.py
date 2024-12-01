@@ -13,6 +13,11 @@ from sklearn.impute import KNNImputer
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder
 import joblib
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.metrics import Recall
 
 def imputacion_knn(df):
   """" Esta función hace una imputación knn para las columnas con valores
@@ -128,3 +133,73 @@ def procesar_data(df):
   df_clima = seleccionar_codificar_ciudad_date(df_imputacion_num)
   df_clima2 = correcciones_dir_rain(df_clima)
   return df_clima2
+
+class NeuralNetworkTensorFlow:
+    """
+        Este es un modelo con TensorFlow.
+        En esta clase, se construye el modelo,
+        se define como se fitea el modelo,
+        y como se hacen las predicciones.
+    """
+    def __init__(self, learning_rate=0.01, epochs=500, hidden_units=2, hidden_layers=1):
+        self.learning_rate = learning_rate
+        self.epochs = epochs
+        self.hidden_units = hidden_units  # Número de neuronas en la capa oculta
+        self.hidden_layers = hidden_layers # Número de capas ocultas
+        self.model = None
+
+    def build_model(self):
+        """
+            Para construir el modelo es necesario una arquitectura, un optimizador y una función de pérdida.
+            La arquitectura se construye con el método Sequential, que coloca
+            secuencialmente las capas que uno desea.
+            Las capas "Dense" son las fully connected.
+            Se agregan capas ocultas,
+            y una capa de salida de regresión (una única neurona).
+
+            El optimizador y la función de pérdida se especifican dentro de un compilador.
+
+            Con este método, lo que se devuelve es el modelo sin entrenar, sería equivalente a escribir LinearRegression()
+            en el caso de la regresión lineal.
+        """
+        model = Sequential()
+
+        # Agregar la primera capa oculta (necesita especificar input_shape)
+        model.add(Dense(self.hidden_units, activation='relu', input_shape=(X_train_scaled.shape[1],)))
+
+        # Agregar capas ocultas adicionales (sin input_shape, ya se ajusta automáticamente)
+        for _ in range(self.hidden_layers - 1):  # self.hidden_layers indica el número total de capas ocultas
+            model.add(Dense(self.hidden_units, activation='relu'))
+
+        # Agregar la capa de salida
+        model.add(Dense(1))  # Una neurona para regresión
+
+        optimizer = Adam(learning_rate=self.learning_rate)
+
+        model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy', 'Recall'])
+
+        self.model = model
+
+        # imprimir la cantidad de parámetros a modo de ejemplo
+        print("n° de parámetros:", model.count_params())
+        return model
+
+    def fit(self, X, y):
+      """ Esta es la función donde se entrena el modelo, hay un learning rate e iteraciones,
+      la función que fitea devuelve una historia de pérdida, que vamos a guardar para graficar la evolución. """
+      X = np.array(X)
+      y = np.array(y)
+
+      if self.model is None:
+        self.build_model()
+
+      early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+
+      history = self.model.fit(X, y, epochs=self.epochs, batch_size=32, verbose=0, class_weight=class_weights, callbacks=[early_stopping])
+
+      return history.history
+
+    def predict(self, X):
+        X = np.array(X)
+        predictions = self.model.predict(X)
+        return predictions
