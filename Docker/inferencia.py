@@ -10,7 +10,7 @@ Original file is located at
 import joblib
 import numpy as np
 import pandas as pd
-from procesamiento_datos import procesar_data  # Función de preprocesamiento definida
+from procesamiento_datos import procesar_data, NeuralNetworkTensorFlow  # Función de preprocesamiento definida y clase de NN
 
 # Cargamos el modelo entrenado y el escalador usando joblib
 
