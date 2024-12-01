@@ -10,7 +10,7 @@ Original file is located at
 import joblib
 import numpy as np
 import pandas as pd
-from procesamiento_datos import procesar_datos  # Función de preprocesamiento definida
+from procesamiento_datos import procesar_data  # Función de preprocesamiento definida
 
 # Cargamos el modelo entrenado y el escalador usando joblib
 
@@ -23,7 +23,7 @@ def inferencia(input_file, output_file):
     input_data = pd.read_csv(input_file)
 
     # Paso 2: Preprocesamiento de los datos (imputación, codificación, etc.)
-    input_data_processed = procesar_datos(input_data)  # Llamamos a la función de procesamiento
+    input_data_processed = procesar_data(input_data)  # Llamamos a la función de procesamiento
 
     # Paso 3: Escalar los datos usando el scaler cargado
     input_data_scaled = scaler.transform(input_data_processed)  # Normalizamos o escalamos los datos
